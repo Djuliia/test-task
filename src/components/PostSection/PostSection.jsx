@@ -18,7 +18,7 @@ import {
 import { Title } from 'components/GetSection/GetSection.styled';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-// import { Btn } from 'components/Header/Header.styled';
+import { Btn } from 'components/Header/Header.styled';
 
 export const PostSection = () => {
   const [token, setToken] = useState('');
@@ -194,7 +194,7 @@ export const PostSection = () => {
             <Label>Upload your photo</Label>
             <ErrorMsg name="photo" component="div" />
           </FileInputContainer>
-          {/* <Btn
+          <Btn
             type="submit"
             style={{
               color: '#fff',
@@ -203,8 +203,8 @@ export const PostSection = () => {
             }}
           >
             Sign up
-          </Btn> */}
-          <button type="submit">Sign up</button>
+          </Btn>
+          {/* <button type="submit">Sign up</button> */}
         </StyledForm>
       </Formik>
     </Section>
