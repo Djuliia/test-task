@@ -22,7 +22,7 @@ import * as Yup from 'yup';
 
 export const PostSection = () => {
   const [token, setToken] = useState('');
-  // const [error, setError] = useState(false);
+  const [error, setError] = useState(false);
   const [photo, setPhoto] = useState(new File([], ''));
 
   useEffect(() => {
