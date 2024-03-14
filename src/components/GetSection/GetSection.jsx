@@ -35,7 +35,8 @@ export const GetSection = () => {
       }
     }
     getUsers();
-  }, [currentPage, users]);
+    // eslint-disable-next-line
+  }, [currentPage]);
 
   const handleShowMore = () => {
     if (currentPage < totalPages) {
