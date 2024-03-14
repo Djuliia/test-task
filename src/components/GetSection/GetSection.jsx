@@ -35,7 +35,7 @@ export const GetSection = () => {
       }
     }
     getUsers();
-  }, [currentPage]);
+  }, [currentPage, users]);
 
   const handleShowMore = () => {
     if (currentPage < totalPages) {
