@@ -11,31 +11,57 @@ export const GetSection = () => {
   const [loading, setLoading] = useState(false);
   const [totalPages, setTotalPages] = useState(1);
 
-  useEffect(() => {
-    async function getUsers() {
-      try {
-        setLoading(true);
-        setError(false);
-        const { users: fetchedUsers, total_pages: totalPages } =
-          await fetchUsers({
-            count: 6,
-            offset: (currentPage - 1) * 6,
-            page: currentPage,
-          });
-        if (fetchedUsers.length === 0) {
-          toast.error('No more users to load.');
-        } else {
-          setUsers([...users, ...fetchedUsers]);
+  // useEffect(() => {
+  //   async function getUsers() {
+  //     try {
+  //       setLoading(true);
+  //       setError(false);
+  //       const { users: fetchedUsers, total_pages: totalPages } =
+  //         await fetchUsers({
+  //           count: 6,
+  //           offset: (currentPage - 1) * 6,
+  //           page: currentPage,
+  //         });
+  //       if (fetchedUsers.length === 0) {
+  //         toast.error('No more users to load.');
+  //       } else {
+  //         setUsers([...users, ...fetchedUsers]);
+  //       }
+  //       setTotalPages(totalPages);
+  //     } catch (error) {
+  //       setError(true);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   }
+  //   getUsers();
+  // }, [currentPage]);
+
+  const getUsers = async () => {
+    try {
+      setLoading(true);
+      setError(false);
+      const { users: fetchedUsers, total_pages: totalPages } = await fetchUsers(
+        {
+          count: 6,
+          offset: (currentPage - 1) * 6,
+          page: currentPage,
         }
-        setTotalPages(totalPages);
-      } catch (error) {
-        setError(true);
-      } finally {
-        setLoading(false);
-      }
+      );
+
+      const updatedUsers = [...users, ...fetchedUsers];
+      setUsers(updatedUsers);
+
+      setTotalPages(totalPages);
+    } catch (error) {
+      setError(true);
+    } finally {
+      setLoading(false);
     }
+  };
+
+  useEffect(() => {
     getUsers();
-    // eslint-disable-next-line
   }, [currentPage]);
 
   const handleShowMore = () => {

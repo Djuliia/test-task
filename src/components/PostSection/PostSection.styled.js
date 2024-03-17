@@ -87,8 +87,9 @@ export const RadioField = styled(Field)`
 `;
 
 export const ErrorMsg = styled(ErrorMessage)`
-  color: red;
+  color: ${theme.colors.error};
   font-size: 12px;
+  margin-left: 16px;
 `;
 
 export const Legend = styled.legend`
@@ -119,7 +120,7 @@ export const FileInputContainer = styled.div`
   margin-bottom: 50px;
 `;
 
-export const UploadButton = styled.label`
+export const UploadButton = styled.button`
   padding: 14px 15px;
   border-radius: 4px 0px 0px 4px;
   border: 1px solid rgba(0, 0, 0, 0.87);
@@ -135,6 +136,15 @@ export const Label = styled.div`
   color: ${theme.colors.secodaryText};
 `;
 
-export const FileField = styled(Field)`
-  display: none;
+export const BtnSubmit = styled.button`
+  text-align: center;
+  padding: 4px;
+  width: 100px;
+  line-height: 1.625;
+  background-color: #b4b4b4;
+  color: #fff;
+  border-radius: 80px;
+  border: none;
+  margin: 0 auto;
+  transition: background-color 0.3 ease;
 `;

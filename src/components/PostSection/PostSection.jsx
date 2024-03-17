@@ -1,5 +1,5 @@
 import { fetchToken } from 'api';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   ErrorMsg,
   RadioField,
@@ -13,59 +13,43 @@ import {
   FileInputContainer,
   UploadButton,
   Label,
-  FileField,
+  BtnSubmit,
 } from './PostSection.styled';
 import { Title } from 'components/GetSection/GetSection.styled';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import { Btn } from 'components/Header/Header.styled';
+import toast from 'react-hot-toast';
 
 export const PostSection = () => {
   const [token, setToken] = useState('');
-  // const [error, setError] = useState(false);
-  const [photo, setPhoto] = useState(new File([], ''));
+  const fileRef = useRef(null);
 
   useEffect(() => {
     async function getToken() {
       try {
         const { token } = await fetchToken();
         setToken(token);
-        console.log(token);
       } catch (error) {
         console.log(error);
+        toast.error(error);
       }
     }
     getToken();
   }, []);
 
-  const handlePhotoChange = event => {
-    const file = event.currentTarget.files[0];
-    setPhoto(file);
+  const handleUploadPhoto = async event => {
+    fileRef.current.click();
   };
 
-  useEffect(() => {
-    console.log(photo);
-  }, [photo]);
-
-  const handleSubmit = async (values, { setSubmitting }) => {
-    if (!photo) {
-      console.log('No file selected');
-      return;
-    }
+  const handleSubmit = async (values, setFieldValue) => {
     try {
       const formData = new FormData();
       formData.append('position_id', values.position);
       formData.append('name', values.name);
       formData.append('email', values.email);
       formData.append('phone', values.phone);
-      formData.append('photo', photo);
-      console.log('Sending request...');
-      console.log(
-        'URL:',
-        'https://frontend-test-assignment-api.abz.agency/api/v1/users'
-      );
-      console.log('Method:', 'POST');
-      console.log('Data:', formData);
+      formData.append('photo', values.photo);
+
       const response = await fetch(
         'https://frontend-test-assignment-api.abz.agency/api/v1/users',
         {
@@ -78,17 +62,14 @@ export const PostSection = () => {
       );
 
       const data = await response.json();
-      console.log('Response:', data);
 
       if (data.success) {
-        console.log('Request was successful');
+        toast.success('Request was successful');
       } else {
-        console.log('Server error');
+        toast.error(data.message || 'Server error');
       }
     } catch (error) {
-      console.error('Network error:', error);
-    } finally {
-      setSubmitting(false);
+      toast.error(error.message);
     }
   };
 
@@ -103,7 +84,7 @@ export const PostSection = () => {
           position: '',
           photo: '',
         }}
-        validationSchema={Yup.object({
+        validationSchema={Yup.object().shape({
           position: Yup.number().required('Required'),
           name: Yup.string()
             .required('Required')
@@ -126,89 +107,110 @@ export const PostSection = () => {
             .matches(/^[\+]{0,1}380([0-9]{9})$/, 'Invalid phone number'),
           photo: Yup.mixed()
             .required('Photo is required')
+            .nullable()
             .test(
               'fileSize',
               'File size is too large, maximum size is 5MB',
-              value => value && value.size <= 5 * 1024 * 1024
+              value => !value || (value && value.size <= 5 * 1024 * 1024)
             )
+            .test(
+              'imageSize',
+              'Image size must be at least 70x70px',
+              function (value) {
+                if (!value) return true;
+                const image = new Image();
+                image.src = window.URL.createObjectURL(value);
+                return new Promise((resolve, reject) => {
+                  image.onload = () => {
+                    const { naturalWidth, naturalHeight } = image;
+                    resolve(naturalWidth >= 70 && naturalHeight >= 70);
+                  };
+                  image.onerror = () => {
+                    reject(new Error('Failed to load image'));
+                  };
+                });
+              }
+            )
+
             .test(
               'fileType',
               'File type must be JPEG or JPG',
-              value => value && ['image/jpeg', 'image/jpg'].includes(value.type)
+              value =>
+                !value ||
+                (value && ['image/jpeg', 'image/jpg'].includes(value.type))
             ),
         })}
         onSubmit={handleSubmit}
       >
-        <StyledForm>
-          <StyledField name="name" type="text" placeholder="Your name" />
-          <ErrorMsg name="name" component="div" />
-          <StyledField name="email" type="email" placeholder="Email" />
-          <ErrorMsg name="email" component="div" />
-          <StyledField name="phone" type="tel" placeholder="Phone" />
-          <p>+38XXXXXXXXXX</p>
-          <ErrorMsg name="phone" component="div" />
+        {({ values, setFieldValue }) => (
+          <StyledForm>
+            <StyledField name="name" type="text" placeholder="Your name" />
+            <ErrorMsg name="name" component="div" />
+            <StyledField name="email" type="email" placeholder="Email" />
+            <ErrorMsg name="email" component="div" />
+            <StyledField name="phone" type="tel" placeholder="Phone" />
+            <p>+38XXXXXXXXXX</p>
+            <ErrorMsg name="phone" component="div" />
 
-          <RadioContainer>
-            <Legend>Select your position</Legend>
-            <RadioBox>
-              <RadioWrap>
-                <RadioField
-                  type="radio"
-                  id="frontend"
-                  name="position"
-                  value="5"
-                />
-                <label htmlFor="frontend">Frontend developer</label>
-              </RadioWrap>
-              <RadioWrap>
-                <RadioField
-                  type="radio"
-                  id="backend"
-                  name="position"
-                  value="6"
-                />
-                <label htmlFor="backend">Backend developer</label>
-              </RadioWrap>
-              <RadioWrap>
-                <RadioField
-                  type="radio"
-                  id="designer"
-                  name="position"
-                  value="4"
-                />
-                <label htmlFor="designer">Designer</label>
-              </RadioWrap>
-              <RadioWrap>
-                <RadioField type="radio" id="qa" name="position" value="7" />
-                <label htmlFor="qa">QA</label>
-              </RadioWrap>
-            </RadioBox>
-            <ErrorMsg name="position" component="div" />
-          </RadioContainer>
+            <RadioContainer>
+              <Legend>Select your position</Legend>
+              <RadioBox>
+                <RadioWrap>
+                  <RadioField
+                    type="radio"
+                    id="frontend"
+                    name="position"
+                    value="1"
+                  />
+                  <label htmlFor="frontend">Frontend developer</label>
+                </RadioWrap>
+                <RadioWrap>
+                  <RadioField
+                    type="radio"
+                    id="backend"
+                    name="position"
+                    value="2"
+                  />
+                  <label htmlFor="backend">Backend developer</label>
+                </RadioWrap>
+                <RadioWrap>
+                  <RadioField
+                    type="radio"
+                    id="designer"
+                    name="position"
+                    value="4"
+                  />
+                  <label htmlFor="designer">Designer</label>
+                </RadioWrap>
+                <RadioWrap>
+                  <RadioField type="radio" id="qa" name="position" value="3" />
+                  <label htmlFor="qa">QA</label>
+                </RadioWrap>
+              </RadioBox>
+              <ErrorMsg name="position" component="div" />
+            </RadioContainer>
 
-          <FileInputContainer>
-            <UploadButton htmlFor="file-upload">Upload</UploadButton>
-            <FileField
-              id="file-upload"
-              name="photo"
-              type="file"
-              onChange={handlePhotoChange}
-            />
-            <Label>Upload your photo</Label>
-            <ErrorMsg name="photo" component="div" />
-          </FileInputContainer>
-          <Btn
-            type="submit"
-            style={{
-              color: '#fff',
-              backgroundColor: '#B4B4B4',
-              margin: '0 auto',
-            }}
-          >
-            Sign up
-          </Btn>
-          {/* <button type="submit">Sign up</button> */}
-        </StyledForm>
+            <FileInputContainer>
+              <UploadButton htmlFor="file-upload" onClick={handleUploadPhoto}>
+                Upload
+              </UploadButton>
+              <input
+                ref={fileRef}
+                id="file-upload"
+                hidden
+                type="file"
+                onChange={e => {
+                  setFieldValue('photo', e.target.files[0]);
+                  console.log(values.photo);
+                }}
+              />
+              <Label>{values.photo ? 'Item' : 'Upload your photo'}</Label>
+
+              <ErrorMsg name="photo" component="div" />
+            </FileInputContainer>
+            <BtnSubmit type="submit">Sign up</BtnSubmit>
+          </StyledForm>
+        )}
       </Formik>
     </Section>
   );

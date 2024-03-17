@@ -6,5 +6,6 @@ export const theme = {
     white: '#FFFFFF',
     primaryText: 'rgba(0, 0, 0, 0.87)',
     secodaryText: '#7E7E7E',
+    error: '#CB3D40',
   },
 };
