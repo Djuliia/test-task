@@ -1,3 +1,4 @@
+import { TextField } from '@mui/material';
 import { Field, Form, ErrorMessage } from 'formik';
 import styled from 'styled-components';
 import { theme } from 'theme';
@@ -27,14 +28,44 @@ export const StyledForm = styled(Form)`
   }
 `;
 
-export const StyledField = styled(Field)`
+export const StyledTextField = styled(TextField)`
   width: 100%;
   padding: 14px 16px;
-  border: 1px solid rgb(208, 207, 207);
+  border: ${props => (props.error ? '2px solid red;' : '1px solid #d0cfcf')};
   border-radius: 4px;
-  color: ${theme.colors.secodaryText};
+  color: ${theme.colors.secondaryText};
+  font-family: Nunito;
   &:not(:last-of-type) {
-    margin-bottom: 50px;
+    margin-top: 50px;
+  }
+
+  .MuiOutlinedInput-root {
+    /* border: ${props =>
+      props.error ? '1.5px solid #CB3D40;' : '1px solid #d0cfcf'}; */
+    color: ${theme.colors.primaryText};
+    &.Mui-focused .MuiOutlinedInput-notchedOutline {
+      border: 1px solid #d0cfcf;
+    }
+
+    .MuiFormHelperText-root {
+      color: ${theme.colors.secondaryText};
+      font-size: 12px;
+      line-height: 1.167;
+    }
+  }
+
+  .Mui-focused .MuiInputLabel-root {
+    color: ${theme.colors.primaryText};
+  }
+
+  & label.Mui-focused {
+    color: ${props => (props.error ? '#F8F8F8' : '#7E7E7E')};
+  }
+
+  .MuiFormLabel-root {
+    color: #7e7e7e;
+    font-size: 16px;
+    line-height: 1.625;
   }
 `;
 
@@ -90,6 +121,7 @@ export const ErrorMsg = styled(ErrorMessage)`
   color: ${theme.colors.error};
   font-size: 12px;
   margin-left: 16px;
+  margin-top: 4px;
 `;
 
 export const Legend = styled.legend`
@@ -117,7 +149,6 @@ export const RadioBox = styled.div``;
 export const FileInputContainer = styled.div`
   display: flex;
   align-items: center;
-  margin-bottom: 50px;
 `;
 
 export const UploadButton = styled.button`
@@ -125,6 +156,10 @@ export const UploadButton = styled.button`
   border-radius: 4px 0px 0px 4px;
   border: 1px solid rgba(0, 0, 0, 0.87);
   border-radius: 4px 0px 0px 4px;
+  background-color: ${theme.colors.bg};
+  &.error {
+    border: 2px solid ${theme.colors.error};
+  }
 `;
 
 export const Label = styled.div`
@@ -134,6 +169,10 @@ export const Label = styled.div`
   border-left: none;
   border-radius: 0px 4px 4px 0px;
   color: ${theme.colors.secodaryText};
+  &.error {
+    border: 2px solid ${theme.colors.error};
+    border-left: none;
+  }
 `;
 
 export const BtnSubmit = styled.button`
@@ -146,5 +185,6 @@ export const BtnSubmit = styled.button`
   border-radius: 80px;
   border: none;
   margin: 0 auto;
+  margin-top: 50px;
   transition: background-color 0.3 ease;
 `;

@@ -1,3 +1,5 @@
+import toast from 'react-hot-toast';
+
 export const fetchToken = async () => {
   try {
     const response = await fetch(
@@ -46,3 +48,35 @@ function fetchPositions() {
 }
 
 fetchPositions();
+
+export const createUser = async (token, values) => {
+  try {
+    const formData = new FormData();
+    formData.append('position_id', values.position);
+    formData.append('name', values.name);
+    formData.append('email', values.email);
+    formData.append('phone', values.phone);
+    formData.append('photo', values.photo);
+
+    const response = await fetch(
+      'https://frontend-test-assignment-api.abz.agency/api/v1/users',
+      {
+        method: 'POST',
+        body: formData,
+        headers: {
+          Token: token,
+        },
+      }
+    );
+
+    const data = await response.json();
+
+    if (data.success) {
+      toast.success('Request was successful');
+    } else {
+      toast.error(data.message || 'Server error');
+    }
+  } catch (error) {
+    toast.error(error.message);
+  }
+};

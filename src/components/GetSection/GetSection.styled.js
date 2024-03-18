@@ -10,7 +10,7 @@ export const Section = styled.section`
     align-items: center;
     justify-content: center;
     gap: 20px;
-    margin-bottom: 50px;
+    margin: 50px 0px;
 
     @media screen and (min-width: 768px) {
       gap: 16px;
@@ -75,7 +75,7 @@ export const BtnShow = styled.button`
 `;
 
 export const Title = styled.h2`
-  margin-bottom: 50px;
+  /* margin-bottom: 50px; */
   font-size: 40px;
   font-weight: 400;
   line-height: 1;
