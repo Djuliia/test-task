@@ -1,8 +1,8 @@
 import styled from 'styled-components';
-import bgM from '../../images/bg_mobile.jpg';
-import bgT from '../../images/bg_tablet.jpg';
-import bgD from '../../images/bg_desktop.jpg';
-import bgB from '../../images/bg_big.jpg';
+import bgM from '../../images/bg_mobile.webp';
+import bgT from '../../images/bg_tablet.webp';
+import bgD from '../../images/bg_desktop.webp';
+import bgB from '../../images/bg_big.webp';
 import { theme } from 'theme';
 
 export const Section = styled.section`

@@ -22,7 +22,7 @@ export const StyledForm = styled(Form)`
   p {
     font-size: 12px;
     line-height: 1.167;
-    color: ${theme.colors.secodaryText};
+    color: ${theme.colors.secondaryText};
     align-self: flex-start;
     margin-left: 16px;
   }
@@ -34,11 +34,15 @@ export const StyledTextField = styled(TextField)`
   border-radius: 4px;
   color: ${theme.colors.secondaryText};
   font-family: Nunito;
-  outline: none;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 26px;
   &:not(:last-of-type) {
     margin-top: 50px;
   }
-
+  .MuiInputBase-input {
+    padding: 14px 16px;
+  }
   .Mui-error .MuiOutlinedInput-notchedOutline {
     border: ${props =>
       props.error ? '2px solid #F8F8F8' : '1px solid #d0cfcf'};
@@ -58,15 +62,16 @@ export const StyledTextField = styled(TextField)`
     }
   }
 
-  .Mui-focused .MuiInputLabel-root {
+  /* .Mui-focused .MuiInputLabel-root {
     color: ${theme.colors.primaryText};
-  }
+  } */
 
   & label.Mui-focused {
     color: #7e7e7e;
   }
 
   .MuiFormLabel-root {
+    font-family: Nunito;
     color: #7e7e7e;
     font-size: 16px;
     line-height: 1.625;
@@ -172,7 +177,7 @@ export const Label = styled.div`
   border: 1px solid #d0cfcf;
   border-left: none;
   border-radius: 0px 4px 4px 0px;
-  color: ${theme.colors.secodaryText};
+  color: ${theme.colors.secondaryText};
   &.error {
     border: 2px solid ${theme.colors.error};
     border-left: none;

@@ -139,6 +139,7 @@ export const PostSection = () => {
         validationSchema={validationSchema}
         onSubmit={handleSubmit}
         isValid
+        dirty
       >
         {({
           values,
@@ -147,6 +148,7 @@ export const PostSection = () => {
           errors,
           touched,
           isValid,
+          dirty,
         }) => (
           <StyledForm noValidate>
             <StyledTextField
@@ -271,7 +273,7 @@ export const PostSection = () => {
             {errors.photo && touched.photo && (
               <ErrorMsg name="photo" component="div" />
             )}
-            <BtnSubmit type="submit" disabled={!isValid}>
+            <BtnSubmit type="submit" disabled={!isValid || !dirty}>
               Sign up
             </BtnSubmit>
           </StyledForm>
