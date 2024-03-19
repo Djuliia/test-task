@@ -19,9 +19,15 @@ import { Title } from 'components/GetSection/GetSection.styled';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import toast from 'react-hot-toast';
+import { ReactComponent as SvgSuccess } from '../../images/success-image.svg';
+import { Loader } from 'components/Loader';
 
 export const PostSection = () => {
   const [token, setToken] = useState('');
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [error, setError] = useState(false);
+  const [loading, setLoading] = useState(false);
+  // const [isFormValid, setIsFormValid] = useState(false);
   const fileRef = useRef(null);
 
   useEffect(() => {
@@ -30,7 +36,6 @@ export const PostSection = () => {
         const { token } = await fetchToken();
         setToken(token);
       } catch (error) {
-        console.log(error);
         toast.error(error);
       }
     }
@@ -42,37 +47,17 @@ export const PostSection = () => {
   };
 
   const handleSubmit = async values => {
-    createUser(token, values);
-
-    // try {'
-    //   const formData = new FormData();
-    //   formData.append('position_id', values.position);
-    //   formData.append('name', values.name);
-    //   formData.append('email', values.email);
-    //   formData.append('phone', values.phone);
-    //   formData.append('photo', values.photo);
-
-    //   const response = await fetch(
-    //     'https://frontend-test-assignment-api.abz.agency/api/v1/users',
-    //     {
-    //       method: 'POST',
-    //       body: formData,
-    //       headers: {
-    //         Token: token,
-    //       },
-    //     }
-    //   );
-
-    //   const data = await response.json();
-
-    //   if (data.success) {
-    //     toast.success('Request was successful');
-    //   } else {
-    //     toast.error(data.message || 'Server error');
-    //   }
-    // } catch (error) {
-    //   toast.error(error.message);
-    // }
+    try {
+      setLoading(true);
+      setError(false);
+      await createUser(token, values);
+      setIsSuccess(true);
+    } catch (error) {
+      setError(true);
+      toast.error('An error occurred while creating user.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   function truncateFileName(fileName, maxLength) {
@@ -141,6 +126,8 @@ export const PostSection = () => {
   return (
     <Section id="post">
       <Title>Working with POST request</Title>
+      {loading && <Loader />}
+      {error && !loading && toast.error('Oops! Something went wrong!')}
       <Formik
         initialValues={{
           name: '',
@@ -151,8 +138,16 @@ export const PostSection = () => {
         }}
         validationSchema={validationSchema}
         onSubmit={handleSubmit}
+        isValid
       >
-        {({ values, setFieldValue, errors, touched }) => (
+        {({
+          values,
+          setFieldValue,
+          setFieldTouched,
+          errors,
+          touched,
+          isValid,
+        }) => (
           <StyledForm noValidate>
             <StyledTextField
               variant="outlined"
@@ -162,6 +157,7 @@ export const PostSection = () => {
               error={errors.name && touched.name}
               label="Your name"
               value={values.name}
+              onBlur={() => setFieldTouched('name', true)}
               onChange={e => setFieldValue('name', e.target.value)}
               className={`special ${
                 errors.name && touched.name ? 'error' : ''
@@ -181,6 +177,7 @@ export const PostSection = () => {
               className={`special ${
                 errors.email && touched.email ? 'error' : ''
               }`}
+              onBlur={() => setFieldTouched('email', true)}
               onChange={e => setFieldValue('email', e.target.value)}
             />
             {errors.email && touched.email && (
@@ -194,6 +191,7 @@ export const PostSection = () => {
               error={errors.phone && touched.phone}
               label="Phone"
               value={values.phone}
+              onBlur={() => setFieldTouched('phone', true)}
               onChange={e => setFieldValue('phone', e.target.value)}
               helperText={!errors.phone ? '+38XXXXXXXXXX' : null}
               className={`special ${
@@ -201,7 +199,7 @@ export const PostSection = () => {
               }`}
             />
             {errors.phone && touched.phone && (
-              <ErrorMsg name="phone" component="div" />
+              <ErrorMsg name="email" component="div" />
             )}
             <RadioContainer>
               <Legend>Select your position</Legend>
@@ -258,7 +256,6 @@ export const PostSection = () => {
                 type="file"
                 onChange={e => {
                   setFieldValue('photo', e.target.files[0]);
-                  console.log(values.photo);
                 }}
               />
               <Label
@@ -271,11 +268,23 @@ export const PostSection = () => {
                   : 'Upload your photo'}
               </Label>
             </FileInputContainer>
-            <ErrorMsg name="photo" component="div" />{' '}
-            <BtnSubmit type="submit">Sign up</BtnSubmit>
+            {errors.photo && touched.photo && (
+              <ErrorMsg name="photo" component="div" />
+            )}
+            <BtnSubmit type="submit" disabled={!isValid}>
+              Sign up
+            </BtnSubmit>
           </StyledForm>
         )}
       </Formik>
+      {isSuccess && (
+        <>
+          <Title style={{ margin: '50px 0px' }}>
+            User successfully registered
+          </Title>
+          <SvgSuccess width="328" height="290" />
+        </>
+      )}
     </Section>
   );
 };

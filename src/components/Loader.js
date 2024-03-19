@@ -4,11 +4,11 @@ export const Loader = () => {
   return (
     <TailSpin
       visible={true}
-      height="80"
-      width="80"
+      height="48"
+      width="48"
       color="#00BDD3"
       ariaLabel="tail-spin-loading"
-      radius="1"
+      radius="8"
       wrapperStyle={{}}
       wrapperClass=""
     />

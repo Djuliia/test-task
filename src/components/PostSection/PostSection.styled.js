@@ -31,17 +31,21 @@ export const StyledForm = styled(Form)`
 export const StyledTextField = styled(TextField)`
   width: 100%;
   padding: 14px 16px;
-  border: ${props => (props.error ? '2px solid red;' : '1px solid #d0cfcf')};
   border-radius: 4px;
   color: ${theme.colors.secondaryText};
   font-family: Nunito;
+  outline: none;
   &:not(:last-of-type) {
     margin-top: 50px;
   }
 
+  .Mui-error .MuiOutlinedInput-notchedOutline {
+    border: ${props =>
+      props.error ? '2px solid #F8F8F8' : '1px solid #d0cfcf'};
+  }
+
   .MuiOutlinedInput-root {
-    /* border: ${props =>
-      props.error ? '1.5px solid #CB3D40;' : '1px solid #d0cfcf'}; */
+    border: #d0cfcf;
     color: ${theme.colors.primaryText};
     &.Mui-focused .MuiOutlinedInput-notchedOutline {
       border: 1px solid #d0cfcf;
@@ -59,7 +63,7 @@ export const StyledTextField = styled(TextField)`
   }
 
   & label.Mui-focused {
-    color: ${props => (props.error ? '#F8F8F8' : '#7E7E7E')};
+    color: #7e7e7e;
   }
 
   .MuiFormLabel-root {
@@ -180,11 +184,20 @@ export const BtnSubmit = styled.button`
   padding: 4px;
   width: 100px;
   line-height: 1.625;
-  background-color: #b4b4b4;
-  color: #fff;
+  background-color: ${theme.colors.primary};
+  color: ${theme.colors.primaryText};
   border-radius: 80px;
   border: none;
   margin: 0 auto;
   margin-top: 50px;
   transition: background-color 0.3 ease;
+
+  &:hover {
+    background-color: #ffe302;
+  }
+
+  &:disabled {
+    background-color: #b4b4b4;
+    color: #fff;
+  }
 `;
