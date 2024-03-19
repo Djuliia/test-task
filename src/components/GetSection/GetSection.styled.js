@@ -75,7 +75,6 @@ export const BtnShow = styled.button`
 `;
 
 export const Title = styled.h2`
-  /* margin-bottom: 50px; */
   font-size: 40px;
   font-weight: 400;
   line-height: 1;

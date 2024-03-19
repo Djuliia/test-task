@@ -18,6 +18,7 @@ export const MainContainer = styled.div`
     max-width: 1170px;
   }
 `;
+
 export const StyledHeader = styled.div`
   display: flex;
   justify-content: space-between;

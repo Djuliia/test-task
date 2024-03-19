@@ -15,6 +15,10 @@ export const StyledForm = styled(Form)`
   display: flex;
   flex-direction: column;
   width: 328px;
+  .css-1rv3ei8-MuiFormControl-root-MuiTextField-root {
+    margin: 0px;
+  }
+
   @media screen and (min-width: 768px) {
     width: 380px;
   }
@@ -40,12 +44,16 @@ export const StyledTextField = styled(TextField)`
   &:not(:last-of-type) {
     margin-top: 50px;
   }
-  .MuiInputBase-input {
-    padding: 14px 16px;
+  .MuiOutlinedInput-notchedOutline {
+    border: 1px solid #d0cfcf;
   }
+
   .Mui-error .MuiOutlinedInput-notchedOutline {
-    border: ${props =>
-      props.error ? '2px solid #F8F8F8' : '1px solid #d0cfcf'};
+    border: 2px solid #cb3d40;
+  }
+
+  .Mui-error {
+    color: blue;
   }
 
   .MuiOutlinedInput-root {
@@ -60,14 +68,14 @@ export const StyledTextField = styled(TextField)`
       font-size: 12px;
       line-height: 1.167;
     }
+
+    .MuiFormControl-root-MuiTextField-root {
+      margin: 0px;
+    }
   }
 
-  /* .Mui-focused .MuiInputLabel-root {
-    color: ${theme.colors.primaryText};
-  } */
-
   & label.Mui-focused {
-    color: #7e7e7e;
+    color: ${props => (props.error ? '#CB3D40' : '#7E7E7E')};
   }
 
   .MuiFormLabel-root {
@@ -75,6 +83,7 @@ export const StyledTextField = styled(TextField)`
     color: #7e7e7e;
     font-size: 16px;
     line-height: 1.625;
+    color: ${props => (props.error ? '#CB3D40' : '#7E7E7E')};
   }
 `;
 
